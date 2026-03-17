@@ -28,13 +28,13 @@ public class EtatJeu {
 		this.tourBlanc = true; // le joueur blanc commence
     }
 
-	// Rrmplie la case de la ligne x et de la colonne y par le pion du joueur j.
+	// Remplie la case de la ligne x et de la colonne y par le pion du joueur j.
 	// Si j=null, alors vide la case.
     public void modifie(int x,int y, Joueur j) {
 		getPlateau().modifie(x,y,j);
     }
 
-	// Renvoit AUCUN si l'état n'est pas final, le gagnant sinon (NOIR/BLANC)
+	// Renvoie AUCUN si l'état n'est pas final, le gagnant sinon (NOIR/BLANC)
     public Gagnant etatFinal() {
 		for (int k=0;k<getLargeur();k++) {
 			if (getPlateau().getCase(0,k)==Joueur.joueurNoir) {
@@ -50,4 +50,37 @@ public class EtatJeu {
     }
 
     /*---------------------------------------------Ne programmez qu'en dessous de cette ligne là! (Sauf pour l'importation de modules)------------------------------------------------------------------*/
+
+
+	public static final EtatJeu ETAT_INITIAL = new EtatJeu(8); // état e0
+	public static final EtatJeu ETAT_ECHEC = new EtatJeu(8); // état illicite (impossible)
+
+	// méthode qui affiche le jeu
+	void afficher(){
+
+		// afficher le plateau
+		for(int i=0; i<9; i++){ // hauteur
+			for(int j=0; j<getLargeur()+1; j++){ //
+				if(i==0 && j==0){ // coin en haut à gauche
+					System.out.print(" ");
+				} else if (i==0){ // première ligne (affiche l'id de la colonne)
+					System.out.print(j + " ");
+				} else if (j==0){ // première colonne (affiche l'id de la ligne)
+					System.out.print(i + " ");
+				} else { // sinon affiche le contenu de la case
+					Case c = plateau.getPlateau()[i-1][j-1]; // récupère la case (i-1,j-1)
+					// décalé car on rajouté les indices de ligne/colonne
+					System.out.print(c.toString()+" "); // affiche le contenu de la case
+				}
+			}
+			System.out.println();
+		}
+
+		// afficher à qui est le tour
+		if(getTourBlanc()){
+			System.out.println("Joueur courant : B");
+		} else {
+			System.out.println("Joueur courant : N");
+		}
+	}
 }
