@@ -7,8 +7,8 @@ Date de la dernière version: 03/02/2026.
 
 public class Joueur {
 
-	public static Joueur joueurBlanc = new Joueur();
-    public static Joueur joueurNoir = new Joueur();
+	public static final Joueur joueurBlanc = new Joueur();
+    public static final Joueur joueurNoir = new Joueur();
 
     public Joueur autreJoueur () {
 		if (this==joueurBlanc) {

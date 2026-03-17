@@ -62,11 +62,11 @@ public class EtatJeu {
 		for(int i=0; i<9; i++){ // hauteur
 			for(int j=0; j<getLargeur()+1; j++){ //
 				if(i==0 && j==0){ // coin en haut à gauche
-					System.out.print(" ");
+					System.out.print("  ");
 				} else if (i==0){ // première ligne (affiche l'id de la colonne)
-					System.out.print(j + " ");
+					System.out.print(j-1 + " ");
 				} else if (j==0){ // première colonne (affiche l'id de la ligne)
-					System.out.print(i + " ");
+					System.out.print(i-1 + " ");
 				} else { // sinon affiche le contenu de la case
 					Case c = plateau.getPlateau()[i-1][j-1]; // récupère la case (i-1,j-1)
 					// décalé car on rajouté les indices de ligne/colonne
