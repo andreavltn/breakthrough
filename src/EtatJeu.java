@@ -5,8 +5,11 @@ Auteur: Rémi PALLEN.
 Date de la dernière version: 03/02/2026.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EtatJeu {
-    static private int largeur; // désigne le nombre de colonne du plateau de jeu
+    private int largeur; // désigne le nombre de colonne du plateau de jeu
     private Plateau  plateau; // le plateau du jeu
     private boolean tourBlanc; // true si c'est le tour du Joueur blanc, false sinon
 
@@ -82,5 +85,27 @@ public class EtatJeu {
 		} else {
 			System.out.println("Joueur courant : N");
 		}
+	}
+
+	// méthode qui génère dans une liste l'ensemble des successeurs VALIDES d'un état
+	public List<EtatJeu> successeurs(Joueur j) {
+		List<EtatJeu> resultat = new ArrayList<>();
+		Plateau p = this.plateau;
+
+		// pour chaque case du plateau
+		for (int ligne=0; ligne<8; ligne++) {
+			for (int col=0; col<this.largeur;col++) {
+				if (p.getCase(ligne, col) == j) { // si la case est occupée par le joueur
+					for (int d = -1; d <= 1; d++) { // pour chaque décalage possible (-1,0,1)
+						Action a = new Action(j, ligne, col, d); // génère l'action associée au décalage
+						EtatJeu s = a.successeur(this); // récupère le successeur de l'état via l'action
+						if (s != EtatJeu.ETAT_ECHEC) { // si le successeur est valide
+							resultat.add(s); // l'ajoute à la liste
+						}
+					}
+				}
+			}
+		}
+		return resultat;
 	}
 }
