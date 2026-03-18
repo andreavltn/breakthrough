@@ -19,35 +19,36 @@ public class Action {
         Plateau p = e.getPlateau(); // récupère le plateau de l'état
         int largeur = p.getLargeur(); // récupère sa largeur
 
-        // crée une copie de l'état
+        // crée une copie de l'état de départ
         EtatJeu s = new EtatJeu(largeur);
         for (int x=0; x<8; x++) {
             for (int y=0; y<largeur; y++) {
                 s.modifie(x, y, p.getCase(x,y)); // copie la case (x,y) de e, dans s
             }
         }
+        s.setTourBlanc(e.getTourBlanc()); // recopie le tour de e dans s
 
+        // détermine le sens de jeu en fonction de la couleur du joueur
         int a;
-        if(j==Joueur.joueurNoir){
-            a=1;
-        } else {
-            a=-1;
+        a = (j==Joueur.joueurNoir) ? -1 : 1;
+
+        // si la case de départ est en dehors du plateau, ou le décalage est invalide
+        if (l<0 || l>7 || c<0 || c>=largeur || d<-1 || d>1){
+            return EtatJeu.ETAT_ECHEC; // échec
         }
 
         int nouvelleLigne = l+a; // nouvelle ligne (+1 ou -1) en fonction de noir/blanc
         int nouvelleColonne = c+d; // nouvelle colonne (avec le décalage)
 
-        // si la case de départ est en dehors du plateau
-        if (l<0 || l>7 || c<0 || c>=largeur)
-            return EtatJeu.ETAT_ECHEC; // échec
-
         // si la case de départ n'est pas occupée par un pion du joueur courant
-        if (p.getCase(l, c)!=j)
+        if (p.getCase(l, c)!=j){
             return EtatJeu.ETAT_ECHEC; // échec
+        }
 
         // si la case d'arrivée est en dehors du plateau
-        if (nouvelleLigne<0 || nouvelleLigne>7 || nouvelleColonne<0 || nouvelleColonne>=largeur)
+        if (nouvelleLigne<0 || nouvelleLigne>7 || nouvelleColonne<0 || nouvelleColonne>=largeur){
             return EtatJeu.ETAT_ECHEC; // échec
+        }
 
         Joueur occupant = p.getCase(nouvelleLigne, nouvelleColonne); // récupère le joueur qui occupe la case d'arrivée
 
@@ -69,6 +70,7 @@ public class Action {
         // sinon si on arrive ici, le coup est valide
         s.modifie(l, c, null); // vide la case de départ
         s.modifie(nouvelleLigne, nouvelleColonne, j); // ajoute le pion à la case d'arrivée
+        s.setTourAdverse(); // passe au tour adverse
 
         return s; // renvoie l'état successeur
     }

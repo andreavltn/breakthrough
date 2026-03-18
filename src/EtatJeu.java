@@ -80,11 +80,9 @@ public class EtatJeu {
 		}
 
 		// afficher à qui est le tour
-		if(getTourBlanc()){
-			System.out.println("Joueur courant : B");
-		} else {
-			System.out.println("Joueur courant : N");
-		}
+		String message;
+		message = getTourBlanc() ? "Joueur courant : B" : "Joueur courant : N";
+		System.out.println(message);
 	}
 
 	// méthode qui génère dans une liste l'ensemble des successeurs VALIDES d'un état
@@ -107,5 +105,15 @@ public class EtatJeu {
 			}
 		}
 		return resultat;
+	}
+
+	// change le tour en fonction du paramètre
+	public void setTourBlanc(boolean tourBlanc) {
+		this.tourBlanc = tourBlanc;
+	}
+
+	// fait passer l'état au tour adversaire
+	public void setTourAdverse(){
+		this.tourBlanc = !tourBlanc;
 	}
 }
