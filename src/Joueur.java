@@ -13,10 +13,10 @@ public class Joueur {
     public Joueur autreJoueur () {
 		if (this==joueurBlanc) {
 			return joueurNoir;
-		};
+		}
 		if (this==joueurNoir) {
 			return joueurBlanc;
-		};
+		}
 
 		return null;
 		}
