@@ -49,6 +49,31 @@ public class EtatJeu {
 				return Gagnant.BLANC;
 			}
 		}
+
+		// si le blanc n'a plus de pions, le noir gagne
+		boolean blancVivant = false;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < largeur; j++) {
+				if (getPlateau().getCase(i, j) == Joueur.joueurBlanc) {
+					blancVivant = true;
+				}
+			}
+		}
+		if (!blancVivant) return Gagnant.NOIR;
+
+		// si le noir n'a plus de pions, le blanc gagne
+		boolean noirVivant = false;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < largeur; j++) {
+				if (getPlateau().getCase(i, j) == Joueur.joueurNoir) {
+					noirVivant = true;
+				}
+			}
+		}
+		if (!noirVivant) return Gagnant.BLANC;
+
+		// sinon pas de gagnant actuellement
+
 		return Gagnant.AUCUN;
     }
 

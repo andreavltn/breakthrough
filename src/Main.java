@@ -51,7 +51,7 @@ public class Main {
                 long msDebut = System.currentTimeMillis();
 
                 // trouve le meilleur successeur (avec profondeur choisie à l'initialisation)
-                successeur = Minimax.meilleureAction(joueurCourant, etat, profondeur);
+                successeur = Minimax.meilleurCoup(joueurCourant, etat, profondeur);
 
                 // stocke le temps auquel l'IA a fini de calculer
                 long msFin = System.currentTimeMillis();

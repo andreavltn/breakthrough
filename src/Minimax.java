@@ -89,7 +89,7 @@ public class Minimax {
     }
 
     // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état
-    public static EtatJeu meilleureAction(Joueur j, EtatJeu etat, int profondeur) {
+    public static EtatJeu meilleurCoup(Joueur j, EtatJeu etat, int profondeur) {
 
         // récupère le joueur courant
         Joueur joueurCourant = etat.getTourBlanc() ? Joueur.joueurBlanc : Joueur.joueurNoir;
