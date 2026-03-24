@@ -18,7 +18,7 @@ public class Main {
         // choix de la profondeur
         int profondeur = 1;
         if (mode == 2 || mode == 3) {
-            System.out.print("Profondeur minimax (>1) : ");
+            System.out.print("Profondeur minimax (>0) : ");
             profondeur = Integer.parseInt(sc.nextLine().trim());
         }
 
