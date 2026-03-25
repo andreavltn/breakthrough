@@ -31,6 +31,7 @@ public class Main {
 
         // tant qu'il n'y a pas de gagnant
         while (etat.etatFinal() == Gagnant.AUCUN) {
+            
             etat.afficher(); // affiche l'état en cours
 
             // stocke le joueur courant
@@ -51,7 +52,7 @@ public class Main {
                 long msDebut = System.currentTimeMillis();
 
                 // trouve le meilleur successeur (avec profondeur choisie à l'initialisation)
-                successeur = Minimax.meilleurCoup(joueurCourant, etat, profondeur);
+                successeur = Minimax.meilleurCoupAB(joueurCourant, etat, profondeur);
 
                 // stocke le temps auquel l'IA a fini de calculer
                 long msFin = System.currentTimeMillis();
