@@ -8,11 +8,10 @@ public class Main {
 
         // choix du mode de jeu
         System.out.println("--- BREAKTHROUGH ---");
-        System.out.println("Mode de jeu :");
         System.out.println("1) Humains vs Humain");
         System.out.println("2) Humain vs IA");
         System.out.println("3) IA vs IA");
-        System.out.print("Choix du mode :");
+        System.out.print("Choix du mode : ");
         int mode = Integer.parseInt(sc.nextLine().trim());
 
         // choix de la profondeur
@@ -52,7 +51,7 @@ public class Main {
                 long msDebut = System.currentTimeMillis();
 
                 // trouve le meilleur successeur (avec profondeur choisie à l'initialisation)
-                successeur = Minimax.meilleurCoupAB(joueurCourant, etat, profondeur);
+                successeur = Minimax.meilleurCoupAB(joueurCourant, etat, profondeur, Eval::eval0);
 
                 // stocke le temps auquel l'IA a fini de calculer
                 long msFin = System.currentTimeMillis();

@@ -1,137 +1,16 @@
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class Minimax {
-
-    // eval0 naïve : différence de nombre de pions entre j_courant et j_adverse
-    public static int eval0(Joueur j, EtatJeu etat) {
-        Plateau p = etat.getPlateau(); // récupère le plateau
-        int largeur = p.getLargeur(); // recupère la largeur du plateau
-        int score = 0; // score initial 0
-
-        // pour chaque case du plateau
-        for (int ligne = 0; ligne < 8; ligne++) {
-            for (int col = 0; col < largeur; col++) {
-                Joueur occupant = p.getCase(ligne, col); // récupère l'occupant de la case
-
-                // si la case est occupée par le joueur courant
-                if (occupant == j) {
-                    score++; // augmente le score
-                }
-
-                // sinon si la case est occupé par le joueur adverse
-                else if (occupant == j.autreJoueur()) {
-                    score--; // baisse le score
-                }
-
-                // sinon la case est vide : ne fait rien
-            }
-        }
-
-        return score; // renvoie le score de l'état
-    }
-
-    // algorithme minimax : pour un état, renvoie le score du joueur j avec une profondeur
-    // cad : si les deux joueurs jouent de façon optimale pendant encore "profondeur" coup
-    // -> quel est le score du joueur j?
-    public static int minimax(Joueur j, EtatJeu etat, int profondeur) {
-
-        // si profondeur = 0 ou si l'état actuel est final
-        if (profondeur == 0 || etat.etatFinal() != Gagnant.AUCUN) {
-            return eval0(j, etat); // renvoie son eval0 (évaluation directe)
-        }
-
-        // récupère le joueur courant
-        Joueur joueurCourant = etat.getTourBlanc() ? Joueur.joueurBlanc : Joueur.joueurNoir;
-
-        // génère les successeurs de l'état actuel
-        List<EtatJeu> successeurs = etat.successeurs(joueurCourant);
-
-        // si il n'y a aucun successeur (état final)
-        if (successeurs.isEmpty()) {
-            return eval0(j, etat); // renvoie son eval0 (évaluation directe)
-        }
-
-        // sinon si on arrive ici, il y a des successeurs
-
-        // si c'est au tour du joueur j, on maximise son score
-        if (joueurCourant == j) {
-
-            // max = -infini au début
-            int max = Integer.MIN_VALUE;
-
-            // pour chaque successeur généré
-            for (EtatJeu s : successeurs) {
-                int score = minimax(j, s, profondeur - 1); // calcule son score
-                if (score>max) { // si le score est meilleur que le max
-                    max = score; // met à jour le max
-                }
-            }
-
-            return max; // on renvoie le score maximal trouvé
-        }
-
-        // sinon c'est au tour du joueur adverse, on minimise son score
-        else {
-
-            // min = +infini au début
-            int min = Integer.MAX_VALUE;
-
-            // pour chaque successeur généré
-            for (EtatJeu s : successeurs) {
-                int score = minimax(j, s, profondeur-1); // calcule son score
-                if (score<min) { // si le score est moins bon que le min
-                    min = score; // met à jour le min
-                }
-            }
-
-            return min; // on renvoie le score minimal trouvé
-        }
-    }
-
-    // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état
-    public static EtatJeu meilleurCoup(Joueur j, EtatJeu etat, int profondeur) {
-
-        // récupère le joueur courant
-        Joueur joueurCourant = etat.getTourBlanc() ? Joueur.joueurBlanc : Joueur.joueurNoir;
-
-        // génère les successeurs de l'état
-        List<EtatJeu> successeurs = etat.successeurs(j);
-
-        // si il n'y aucun successeur
-        if(successeurs.isEmpty()){
-            return etat; // renvoie l'état actuel
-        }
-
-        EtatJeu meilleur = null; // pas de meilleur état pour l'instant
-        int max = Integer.MIN_VALUE; // max = -infini
-
-        // pour chaque successeur
-        for (EtatJeu s : successeurs) {
-
-            // calcule son score minimax
-            int score = minimax(j, s, profondeur-1);
-
-            // si le score est meilleur que le max actuel
-            if (score>max) {
-                max = score; // met à jour le max
-                meilleur = s; // met à jour le meilleur état
-            }
-        }
-
-        return meilleur; // on renvoie l'état avec le meilleur score
-    }
-
-
-
 
     // algorithme minimax avec élagage alpha/beta
     // même algorithme mais on arrête de chercher si la branche est inutile
     // cad : si on a déjà trouvé une meilleure branche
-    public static int minimaxAB(Joueur j, EtatJeu etat, int profondeur, int alpha, int beta) {
+    public static int minimaxAB(Joueur j, EtatJeu etat, int profondeur, int alpha, int beta, BiFunction<Joueur, EtatJeu, Integer> eval) {
 
         // si profondeur = 0 ou si l'état actuel est final
         if (profondeur == 0 || etat.etatFinal() != Gagnant.AUCUN) {
-            return eval0(j, etat);
+            return eval.apply(j, etat); // renvoie son évaluation directe (eval0)
         }
 
         // récupère le joueur courant
@@ -142,7 +21,7 @@ public class Minimax {
 
         // si il n'y a aucun successeur (état final)
         if (successeurs.isEmpty()) {
-            return eval0(j, etat); // renvoie son éval0 (évaluation directe)
+            return eval.apply(j, etat); // renvoie son évaluation directe (eval0)
         }
 
         // sinon si on arrive ici, il y a des successeurs
@@ -156,8 +35,8 @@ public class Minimax {
             // pour chaque successeur généré
             for (EtatJeu s : successeurs) {
 
-                // calcule son score en transmettant les paramètres alpha/beta
-                int score = minimaxAB(j, s, profondeur-1, alpha, beta);
+                // calcule son score en transmettant les paramètres alpha/beta (et la fonction eval0)
+                int score = minimaxAB(j, s, profondeur-1, alpha, beta, eval);
 
                 if (score > max) { // si le score est meilleur que le max
                     max = score; // met à jour le max
@@ -184,8 +63,8 @@ public class Minimax {
             // pour chaque successeur généré
             for (EtatJeu s : successeurs) {
 
-                // calcule son score en transmettant les paramètres alpha/beta
-                int score = minimaxAB(j, s, profondeur-1, alpha, beta);
+                // calcule son score en transmettant les paramètres alpha/beta (et la fonction eval0)
+                int score = minimaxAB(j, s, profondeur-1, alpha, beta, eval);
 
                 if (score<min) { // si le score est moins bon que le min
                     min = score; // met à jour le min
@@ -208,10 +87,7 @@ public class Minimax {
 
     // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état
     // avec élagage alpha/beta cette fois-ci
-    public static EtatJeu meilleurCoupAB(Joueur j, EtatJeu etat, int profondeur) {
-
-        // récupère le joueur courant
-        Joueur joueurCourant = etat.getTourBlanc() ? Joueur.joueurBlanc : Joueur.joueurNoir;
+    public static EtatJeu meilleurCoupAB(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Integer> eval) {
 
         // génère les successeurs de l'état
         List<EtatJeu> successeurs = etat.successeurs(j);
@@ -228,7 +104,7 @@ public class Minimax {
         for (EtatJeu s : successeurs) {
 
             // calcule son score minimax avec élagage alpha/beta
-            int score = minimaxAB(j, s, profondeur - 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int score = minimaxAB(j, s, profondeur - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, eval);
 
             // si le score est meilleur que le max actuel
             if (score>max) {
@@ -239,6 +115,68 @@ public class Minimax {
 
         return meilleur; // on renvoie l'état avec le meilleur score
     }
+
+
+    // fait jouer deux eval l'une contre l'autre sur une partie, et renvoie le gagnant
+    public static Gagnant unePartie(BiFunction<Joueur, EtatJeu, Integer> evalBlanc,
+                                    BiFunction<Joueur, EtatJeu, Integer> evalNoir,
+                                    int profondeur) {
+
+        // crée un état initial (c'est l'état qui va être utilisé toute la partie)
+        EtatJeu etat = new EtatJeu(8);
+
+        // tant que l'état n'est pas final
+        while (etat.etatFinal() == Gagnant.AUCUN) {
+
+            // récupère le joueur courant
+            Joueur joueurCourant = etat.getTourBlanc() ? Joueur.joueurBlanc : Joueur.joueurNoir;
+
+            // si c'est au tour du joueur blanc
+            if(etat.getTourBlanc()){
+                etat = meilleurCoupAB(joueurCourant, etat, profondeur, evalBlanc); // joue avec evalBlanc
+            }
+
+            // sinon c'est au tour du joueur noir
+            else {
+                etat = meilleurCoupAB(joueurCourant, etat, profondeur, evalNoir); // joue avec evalNoir
+            }
+        }
+
+        return etat.etatFinal(); // renvoie le joueur gagnant
+    }
+
+
+
+    // fait jouer deux evals sur un certain nombre de parties, et renvoie un entier correspondant au gagnant
+    public static int comparerEvals(BiFunction<Joueur, EtatJeu, Integer> evalA,
+                                    BiFunction<Joueur, EtatJeu, Integer> evalB,
+                                    int profondeur, int nbParties) {
+
+        // compteur du nombre de victoires
+        // +1 si evalA gagne, -1 si evalB gagne
+        int victoires = 0;
+
+        // fait jouer n parties
+        // alterne le joueur qui commence par équité
+        for (int i = 0; i < nbParties; i++) {
+            Gagnant resultat; // le gagnant de la partie
+
+            if (i % 2 == 0) {
+                resultat = unePartie(evalA, evalB, profondeur); // evalA commence, evalA = blancs
+                if (resultat == Gagnant.BLANC) victoires++; // incrémente si evalA gagne
+                if (resultat == Gagnant.NOIR)  victoires--; // décrémente si evalB gagne
+            } else {
+                resultat = unePartie(evalB, evalA, profondeur); // evalB commence, evalB = blancs
+                if (resultat == Gagnant.NOIR)  victoires++; // incrémente si evalA gagne
+                if (resultat == Gagnant.BLANC) victoires--; // décrémente si evalB gagne
+            }
+        }
+
+        // renvoie 1 si victoires > 0 ||| -1 si victoires < 0 ||| 0 si victoires = 0
+        return Integer.compare(victoires, 0);
+    }
+
 }
+
 
 
