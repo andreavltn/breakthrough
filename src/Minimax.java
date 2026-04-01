@@ -1,4 +1,6 @@
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.function.BiFunction;
 
 public class Minimax {
@@ -97,9 +99,8 @@ public class Minimax {
             return etat; // renvoie l'état actuel
         }
 
-        EtatJeu meilleur = null; // pas de meilleur état pour l'instant
+        List<EtatJeu> meilleurs = new ArrayList<>(); // liste des etats avec le meilleur score
         int max = Integer.MIN_VALUE; // max = -infini
-
         // pour chaque successeur
         for (EtatJeu s : successeurs) {
 
@@ -109,11 +110,19 @@ public class Minimax {
             // si le score est meilleur que le max actuel
             if (score>max) {
                 max = score; // met à jour le max
-                meilleur = s; // met à jour le meilleur état
+                meilleurs.clear(); // réinitialise la liste des meilleurs
+                meilleurs.add(s); // ajoute l'état aux meilleurs
+            }
+
+            // si le score est identique
+            else if (score==max){
+                meilleurs.add(s);  // ajoute aussi l'état aux meilleurs (car il est équivalent)
             }
         }
 
-        return meilleur; // on renvoie l'état avec le meilleur score
+        // génère un indice aléatoire entre 0 et n-1
+        int randomValue = new Random().nextInt(meilleurs.size());
+        return meilleurs.get(randomValue); // renvoie le meilleur coup choisi aléatoirement
     }
 
 
@@ -158,11 +167,12 @@ public class Minimax {
 
         // fait jouer n parties
         // alterne le joueur qui commence par équité
-        for (int i = 0; i < nbParties; i++) {
+        for (int i=0; i<nbParties; i++) {
+
             Gagnant resultat; // le gagnant de la partie
 
-            if (i % 2 == 0) {
-                resultat = unePartie(evalA, evalB, profondeur); // evalA commence, evalA = blancs
+            if (i%2 == 0) {
+                resultat = unePartie(evalA, evalB, profondeur); //evalA = blanc donc commence
                 if (resultat == Gagnant.BLANC) victoires++; // incrémente si evalA gagne
                 if (resultat == Gagnant.NOIR)  victoires--; // décrémente si evalB gagne
             } else {
@@ -172,8 +182,7 @@ public class Minimax {
             }
         }
 
-        // renvoie 1 si victoires > 0 ||| -1 si victoires < 0 ||| 0 si victoires = 0
-        return Integer.compare(victoires, 0);
+        return victoires;
     }
 
 }

@@ -28,6 +28,7 @@ public class Eval {
         return score;
     }
 
+    // eval0 évoluée, prend en compte l'avancée des pions sur le plateau
     public static int evalEvoluee(Joueur j, EtatJeu etat) {
         Plateau p = etat.getPlateau();
         int largeur = p.getLargeur();
@@ -43,7 +44,7 @@ public class Eval {
                 // si c'est le joueur courant
                 if (occupant == j) {
 
-                    score++; // +1 par pion
+                    score+=10; // +10 par pion
 
                     // valorise l'avancement du pion sur le plateau
                     // plus il est loin plus il est important
@@ -57,7 +58,7 @@ public class Eval {
                 // sinon c'est le joueur adverse
                 else if (occupant == j.autreJoueur()) {
 
-                    score--; // -1 par pion adverse
+                    score-=10; // -10 par pion adverse
 
                     // valorise l'avancement du pion sur le plateau
                     // plus il est loin plus il est important
@@ -70,5 +71,11 @@ public class Eval {
         }
 
         return score;
+    }
+
+
+    // eval qui renvoie le même score pour tous les états
+    public static int evalBasique(Joueur j, EtatJeu etat) {
+        return 0;
     }
 }

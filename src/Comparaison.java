@@ -3,8 +3,9 @@ import java.util.function.BiFunction;
 public class Comparaison {
 
     public static void main(String[] args) {
-        BiFunction<Joueur, EtatJeu, Integer> evalA = Eval::eval0;
-        BiFunction<Joueur, EtatJeu, Integer> evalB = Eval::evalEvoluee;
+
+        BiFunction<Joueur, EtatJeu, Integer> evalA = Eval::evalEvoluee; // evalA
+        BiFunction<Joueur, EtatJeu, Integer> evalB = Eval::eval0; // evalB
 
         // pour n niveau de profondeur
         for (int prof = 1; prof <= 3; prof++) {
