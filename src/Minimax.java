@@ -8,7 +8,7 @@ public class Minimax {
     // algorithme minimax avec élagage alpha/beta
     // même algorithme mais on arrête de chercher si la branche est inutile
     // cad : si on a déjà trouvé une meilleure branche
-    public static int minimaxAB(Joueur j, EtatJeu etat, int profondeur, int alpha, int beta, BiFunction<Joueur, EtatJeu, Integer> eval) {
+    public static double minimaxAB(Joueur j, EtatJeu etat, int profondeur, double alpha, double beta, BiFunction<Joueur, EtatJeu, Double> eval) {
 
         // si profondeur = 0 ou si l'état actuel est final
         if (profondeur == 0 || etat.etatFinal() != Gagnant.AUCUN) {
@@ -32,13 +32,13 @@ public class Minimax {
         if (joueurCourant == j) {
 
             // max = -infini au début
-            int max = Integer.MIN_VALUE;
+            double max = Double.NEGATIVE_INFINITY;
 
             // pour chaque successeur généré
             for (EtatJeu s : successeurs) {
 
                 // calcule son score en transmettant les paramètres alpha/beta (et la fonction eval0)
-                int score = minimaxAB(j, s, profondeur-1, alpha, beta, eval);
+                double score = minimaxAB(j, s, profondeur-1, alpha, beta, eval);
 
                 if (score > max) { // si le score est meilleur que le max
                     max = score; // met à jour le max
@@ -60,13 +60,13 @@ public class Minimax {
         else {
 
             // min = +infini au début
-            int min = Integer.MAX_VALUE;
+            double min = Double.POSITIVE_INFINITY;
 
             // pour chaque successeur généré
             for (EtatJeu s : successeurs) {
 
                 // calcule son score en transmettant les paramètres alpha/beta (et la fonction eval0)
-                int score = minimaxAB(j, s, profondeur-1, alpha, beta, eval);
+                double score = minimaxAB(j, s, profondeur-1, alpha, beta, eval);
 
                 if (score<min) { // si le score est moins bon que le min
                     min = score; // met à jour le min
@@ -89,7 +89,7 @@ public class Minimax {
 
     // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état
     // avec élagage alpha/beta cette fois-ci
-    public static EtatJeu meilleurCoupAB(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Integer> eval) {
+    public static EtatJeu meilleurCoupAB(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Double> eval) {
 
         // génère les successeurs de l'état
         List<EtatJeu> successeurs = etat.successeurs(j);
@@ -100,12 +100,13 @@ public class Minimax {
         }
 
         List<EtatJeu> meilleurs = new ArrayList<>(); // liste des etats avec le meilleur score
-        int max = Integer.MIN_VALUE; // max = -infini
+        double max = Double.NEGATIVE_INFINITY; // max = -infini
         // pour chaque successeur
         for (EtatJeu s : successeurs) {
 
             // calcule son score minimax avec élagage alpha/beta
-            int score = minimaxAB(j, s, profondeur - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, eval);
+            double score = minimaxAB(j, s, profondeur - 1,
+                    Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, eval);
 
             // si le score est meilleur que le max actuel
             if (score>max) {
@@ -127,8 +128,8 @@ public class Minimax {
 
 
     // fait jouer deux eval l'une contre l'autre sur une partie, et renvoie le gagnant
-    public static Gagnant unePartie(BiFunction<Joueur, EtatJeu, Integer> evalBlanc,
-                                    BiFunction<Joueur, EtatJeu, Integer> evalNoir,
+    public static Gagnant unePartie(BiFunction<Joueur, EtatJeu, Double> evalBlanc,
+                                    BiFunction<Joueur, EtatJeu, Double> evalNoir,
                                     int profondeur) {
 
         // crée un état initial (c'est l'état qui va être utilisé toute la partie)
@@ -156,9 +157,10 @@ public class Minimax {
 
 
 
-    // fait jouer deux evals sur un certain nombre de parties, et renvoie un entier correspondant au gagnant
-    public static int comparerEvals(BiFunction<Joueur, EtatJeu, Integer> evalA,
-                                    BiFunction<Joueur, EtatJeu, Integer> evalB,
+    // fait jouer deux evals sur un certain nombre de parties, et renvoie le nomnbre de victoires
+    // positif si evalA>evalB, sinon négatif (ou nul)
+    public static double comparerEvals(BiFunction<Joueur, EtatJeu, Double> evalA,
+                                    BiFunction<Joueur, EtatJeu, Double> evalB,
                                     int profondeur, int nbParties) {
 
         // compteur du nombre de victoires

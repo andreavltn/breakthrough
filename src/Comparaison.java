@@ -2,19 +2,30 @@ import java.util.function.BiFunction;
 
 public class Comparaison {
 
-    public static void main(String[] args) {
+    // fonction qui fait jouer 10 parties entre deux evals, et renvoie la meilleure
+    // si il n'y a pas de victoire "indiscutable", augmente la profondeur et fait rejouer
+    public static BiFunction<Joueur, EtatJeu, Double> trouverMeilleurEval(
+            BiFunction<Joueur, EtatJeu, Double> evalA,
+            BiFunction<Joueur, EtatJeu, Double> evalB) {
 
-        BiFunction<Joueur, EtatJeu, Integer> evalA = Eval::evalEvoluee; // evalA
-        BiFunction<Joueur, EtatJeu, Integer> evalB = Eval::eval0; // evalB
+        // répéter sur 3 pro
+        for (int prof=1; prof<=3; prof++) {
 
-        // pour n niveau de profondeur
-        for (int prof = 1; prof <= 3; prof++) {
+            // compare les deux evals sur 10 parties
+            double resultat = Minimax.comparerEvals(evalA, evalB, prof, 10);
 
-            // fait jouer 10 parties avec profondeur n
-            int resultat = Minimax.comparerEvals(evalA, evalB, prof, 10);
-
-            // affiche le score
-            System.out.println("Profondeur " + prof + " : " + resultat);
+            // si il y a plus de deux victoires d'écart entre les deux
+            if (Math.abs(resultat) >= 2) {
+                // renvoie le gagnant
+                if(resultat>0){
+                    return evalA;
+                } else {
+                    return evalB;
+                }
+            }
         }
+
+        // sinon renvoie null (égalité ou résultats trop proches
+        return null;
     }
 }

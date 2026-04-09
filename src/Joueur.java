@@ -24,10 +24,10 @@ public class Joueur {
     public String toString() {
 		if (this==joueurBlanc) {
 			return "B";
-		};
+		}
 		if (this==joueurNoir) {
 			return "N";
-		};
+		}
 
 		return "?";
     }

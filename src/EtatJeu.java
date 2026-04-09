@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EtatJeu {
-    private int largeur; // désigne le nombre de colonne du plateau de jeu
-    private Plateau  plateau; // le plateau du jeu
+    private final int largeur; // désigne le nombre de colonne du plateau de jeu
+    private final Plateau  plateau; // le plateau du jeu
     private boolean tourBlanc; // true si c'est le tour du Joueur blanc, false sinon
 
     public int getLargeur() {
