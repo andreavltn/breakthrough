@@ -1,3 +1,5 @@
+import java.util.function.BiFunction;
+
 public class Eval {
 
     // eval0 naïve : différence de nombre de pions entre j_courant et j_adverse
@@ -80,7 +82,7 @@ public class Eval {
     }
 
     // eval évoluée, mais avec scores paramétrés
-    public static double eval0Parametree(Joueur j, EtatJeu etat, double scorePion, double scoreAvancee) {
+    public static double evalParametree(Joueur j, EtatJeu etat, double scorePion, double scoreAvancee) {
         Plateau p = etat.getPlateau(); // récupère le plateau
         int largeur = p.getLargeur(); // recupère la largeur du plateau
         double score = 0; // score initial 0
@@ -117,5 +119,10 @@ public class Eval {
             }
         }
         return score;
+    }
+
+    // renvoie la fonction eval paramétrée avec a et b
+    public static BiFunction<Joueur, EtatJeu, Double> getEvalParametree(double a, double b) {
+        return (j, e) -> evalParametree(j, e, a, b);
     }
 }
