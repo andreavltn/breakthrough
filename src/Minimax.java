@@ -6,8 +6,6 @@ import java.util.function.BiFunction;
 public class Minimax {
 
     // algorithme minimax avec élagage alpha/beta
-    // même algorithme mais on arrête de chercher si la branche est inutile
-    // cad : si on a déjà trouvé une meilleure branche
     public static double minimaxAB(Joueur j, EtatJeu etat, int profondeur, double alpha, double beta, BiFunction<Joueur, EtatJeu, Double> eval) {
 
         // si profondeur = 0 ou si l'état actuel est final
@@ -87,9 +85,8 @@ public class Minimax {
     }
 
 
-    // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état
-    // avec élagage alpha/beta cette fois-ci
-    public static EtatJeu meilleurCoupAB(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Double> eval) {
+    // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état avec élagage alpha/beta
+    public static EtatJeu meilleurCoup(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Double> eval) {
 
         // génère les successeurs de l'état
         List<EtatJeu> successeurs = etat.successeurs(j);
@@ -143,12 +140,12 @@ public class Minimax {
 
             // si c'est au tour du joueur blanc
             if(etat.getTourBlanc()){
-                etat = meilleurCoupAB(joueurCourant, etat, profondeur, evalBlanc); // joue avec evalBlanc
+                etat = meilleurCoup(joueurCourant, etat, profondeur, evalBlanc); // joue avec evalBlanc
             }
 
             // sinon c'est au tour du joueur noir
             else {
-                etat = meilleurCoupAB(joueurCourant, etat, profondeur, evalNoir); // joue avec evalNoir
+                etat = meilleurCoup(joueurCourant, etat, profondeur, evalNoir); // joue avec evalNoir
             }
         }
 

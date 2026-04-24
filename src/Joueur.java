@@ -10,7 +10,7 @@ public class Joueur {
 	public static final Joueur joueurBlanc = new Joueur();
     public static final Joueur joueurNoir = new Joueur();
 
-    public Joueur autreJoueur () {
+    public Joueur autreJoueur() {
 		if (this==joueurBlanc) {
 			return joueurNoir;
 		}
