@@ -113,7 +113,7 @@ public class Comparaison {
         for (int i=0; i<nbVecteurs; i++){
 
             System.out.printf("Essai " + (i+1) + " | ");
-            double[] resultat = optimiser(x,5, 50, 100, 2);
+            double[] resultat = optimiser(x, 5, 50, 100, 2);
             totalA += resultat[0];
             totalB += resultat[1];
             totalC += resultat[2];
