@@ -2,16 +2,18 @@ import java.util.function.BiFunction;
 
 public class Eval {
 
-    // eval0 naïve : différence de nombre de pions entre j_courant et j_adverse
+    // eval0 naïve : différence de nombre de pions entre jCourant et jAdverse
     public static double eval0(Joueur j, EtatJeu etat) {
-        Plateau p = etat.getPlateau(); // récupère le plateau
-        int largeur = p.getLargeur(); // recupère la largeur du plateau
+        Plateau p = etat.getPlateau(); // plateau
+        int largeur = p.getLargeur(); // largeur du plateau
         double score = 0; // score initial 0
 
         // pour chaque case du plateau
         for (int ligne = 0; ligne < 8; ligne++) {
             for (int col = 0; col < largeur; col++) {
-                Joueur occupant = p.getCase(ligne, col); // récupère l'occupant de la case
+
+                // récupère l'occupant de la case
+                Joueur occupant = p.getCase(ligne, col);
 
                 // si la case est occupée par le joueur courant
                 if (occupant == j) {
@@ -27,16 +29,16 @@ public class Eval {
             }
         }
 
-        return score;
+        return score; // renvoie le score
     }
 
-    // eval0 évoluée, prend en compte l'avancée des pions sur le plateau
+    // eval0 évoluée, prend en compte différents facteurs de la partie
     public static double evalEvoluee(Joueur j, EtatJeu etat) {
 
-        Plateau p = etat.getPlateau();
+        Plateau p = etat.getPlateau(); // plateau
         int largeur = p.getLargeur(); // largeur du plateau
         double score = 0; // score initial 0
-        double colonneCentrale = (double) (largeur - 1) /2 ; // centre du plateau (3.5 pour largeur=8)
+        double colonneCentrale = (double) (largeur - 1) /2 ; // indice du centre du plateau (3.5 pour largeur=8)
 
         // parcours du plateau
         for (int ligne = 0; ligne < 8; ligne++) {
@@ -48,7 +50,7 @@ public class Eval {
                 // si c'est le joueur courant
                 if (occupant == j) {
 
-                    score+=10; // +10 par pion
+                    score+=10; // +10 (pour le pion)
 
                     // valorise l'avancement du pion sur le plateau
                     // plus il est loin plus il est important
@@ -56,7 +58,7 @@ public class Eval {
                     score += avancement;
 
                     // valorise les pions qui sont proches de la colonne centrale du plateau
-                    // calcule la distance au centre
+                    // en calculant la distance au centre
                     double distanceCentre = Math.abs(col-colonneCentrale);
                     score += colonneCentrale - distanceCentre; // max quand distanceCentre=0
 
@@ -65,7 +67,7 @@ public class Eval {
                 // sinon c'est le joueur adverse
                 else if (occupant == j.autreJoueur()) {
 
-                    score-=10; // -10 par pion adverse
+                    score-=10; // -10 (pour le pion)
 
                     // pénalise l'avancée des pions adverses
                     int avancementAdverse = (j == Joueur.joueurNoir) ? ligne : (7-ligne);
@@ -78,11 +80,11 @@ public class Eval {
             }
         }
 
-        return score;
+        return score; // renvoie le score
     }
 
 
-    // eval qui renvoie le même score pour tous les états
+    // eval qui renvoie le même score pour tous les états (IA aveugle)
     public static double evalBasique(Joueur j, EtatJeu etat) {
         return 0;
     }
@@ -116,7 +118,7 @@ public class Eval {
                     score += scoreAvancee * avancement;
 
                     // valorise les pions qui sont proches de la colonne centrale
-                    // calcule la distance au centre
+                    // en calculant la distance au centre
                     double distanceCentre = Math.abs(col-colonneCentrale);
                     score += scoreCentre * (colonneCentrale-distanceCentre);
 
@@ -138,10 +140,11 @@ public class Eval {
                 }
             }
         }
-        return score;
+
+        return score; // renvoie le score
     }
 
-    // renvoie la fonction eval paramétrée avec a,b,c
+    // renvoie la fonction eval, paramétrée avec a,b,c
     public static BiFunction<Joueur, EtatJeu, Double> getEvalParametree(double a, double b, double c) {
         return (j, e) -> evalParametree(j, e, a, b, c);
     }

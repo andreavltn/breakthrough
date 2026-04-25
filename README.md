@@ -81,6 +81,12 @@ Il est possible de modifier les paramètres suivants :
 Ils sont utilisés dans la fonction `optimiser(pasInitial, nbIter, nbParties, profondeurMax)`, à la ligne suivante :
 - double[] resultat = optimiser(x, 5, 50, 100, 2)
 
+Pour tester rapidement la fonctionnalité, remplacer la profondeur par 1 (les résultats seront beaucoup plus bruités, mais le temps de calcul beaucoup moins important). Avec profondeur = 2, environ 15-20min de temps de calcul pour obtenir une moyenne des vecteurs optimaux.
+
+On peut aussi décommenter la ligne :
+- /* System.out.printf("Itération %d : a=%.3f b=%.3f c=%.3f pas=%.3f %n", iter+1, a, b, c, pas); */
+
+Ce qui permet de voir l'évolution des coefficients et du pas pendant les itérations.
 ## Fonctions d'évaluation (`Eval.java`)
 
 L'IA utilise une fonction heuristique pour trouver le meilleur coup. Plusieurs sont disponibles :
@@ -101,7 +107,7 @@ Pour chaque pion du joueur courant :
 - `+b × avancement` (distance parcourue depuis le départ)
 - `+c × (centre - distanceAuCentre)` (proximité de la colonne centrale)
 
-Les coefficients trouvés par optimisation sont : **a ≈ 11, b ≈ 3, c ≈ 5**.
+Les coefficients trouvés par optimisation sont : **a ≈ 11, b ≈ 3, c ≈ 5**
 
 ---
 
@@ -118,16 +124,16 @@ L'IA utilise l'algorithme **minimax avec élagage alpha-bêta** :
 
 ```java
 // calcule le score minimax d'un état pour le joueur j (avec élagage alpha-bêta)
-double minimaxAB(Joueur j, EtatJeu etat, int profondeur, double alpha, double beta, BiFunction<Joueur, EtatJeu, Double> eval)
+double minimaxAB(Joueur j, EtatJeu etat, int profondeur, double alpha, double beta, BiFunction<Joueur, EtatJeu, Double> eval);
 
 // renvoie le successeur de l'état ayant le meilleur score (le meilleur coup pour le joueur j)
-EtatJeu meilleurCoup(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Double> eval)
+EtatJeu meilleurCoup(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Double> eval);
 
 // fait jouer une partie complète entre deux fonctions eval, et renvoie le gagnant
-Gagnant unePartie(BiFunction<...> evalBlanc, BiFunction<...> evalNoir, int profondeur)
+Gagnant unePartie(BiFunction<...> evalBlanc, BiFunction<...> evalNoir, int profondeur);
 
 // fait jouer n parties à deux evals, renvoie le score. Si score>0, evalA meilleure, sinon evalB
-double comparerEvals(BiFunction<...> evalA, BiFunction<...> evalB, int profondeur, int nbParties)
+double comparerEvals(BiFunction<...> evalA, BiFunction<...> evalB, int profondeur, int nbParties);
 ```
 
 ---

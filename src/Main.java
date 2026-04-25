@@ -80,8 +80,8 @@ public class Main {
                     int c = Integer.parseInt(valeurs[1]); // colonne
                     int d = Integer.parseInt(valeurs[2]); // décalage
 
-                    Action a = new Action(joueurCourant, l, c, d); // récupère l'action associées aux entrées
-                    successeur = a.successeur(etat); // génère le successeur associé à l'action
+                    Action a = new Action(joueurCourant, l, c, d); // génère l'action associée aux entrées
+                    successeur = a.successeur(etat); // génère le successeur via l'action
 
                     // si c'est un état invalide, erreur
                     if (successeur == EtatJeu.ETAT_ECHEC) {

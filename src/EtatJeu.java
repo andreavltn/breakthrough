@@ -96,8 +96,10 @@ public class EtatJeu {
 				} else if (j==0){ // première colonne (affiche l'id de la ligne)
 					System.out.print(i-1 + " ");
 				} else { // sinon affiche le contenu de la case
+
 					Case c = plateau.getPlateau()[i-1][j-1]; // récupère la case (i-1,j-1)
 					// décalé car on rajouté les indices de ligne/colonne
+
 					System.out.print(c.toString()+" "); // affiche le contenu de la case
 				}
 			}
@@ -112,8 +114,8 @@ public class EtatJeu {
 
 	// méthode qui génère dans une liste l'ensemble des successeurs VALIDES d'un état
 	public List<EtatJeu> successeurs(Joueur j) {
-		List<EtatJeu> resultat = new ArrayList<>();
-		Plateau p = this.plateau;
+		List<EtatJeu> resultat = new ArrayList<>(); // liste des successeurs
+		Plateau p = this.plateau; // plateau
 
 		// pour chaque case du plateau
 		for (int ligne=0; ligne<8; ligne++) {
@@ -129,7 +131,8 @@ public class EtatJeu {
 				}
 			}
 		}
-		return resultat;
+
+		return resultat; // renvoie la liste
 	}
 
 	// change le tour en fonction du paramètre

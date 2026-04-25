@@ -28,11 +28,11 @@ public class Action {
         }
         s.setTourBlanc(e.getTourBlanc()); // recopie le tour de e dans s
 
-        // détermine le sens de jeu en fonction de la couleur du joueur
+        // détermine le sens du jeu en fonction de la couleur du joueur
         int a;
         a = (j==Joueur.joueurNoir) ? -1 : 1;
 
-        // si la case de départ est en dehors du plateau, ou le décalage est invalide
+        // si la case de départ est en dehors du plateau, ou si le décalage est invalide
         if (l<0 || l>7 || c<0 || c>=largeur || d<-1 || d>1){
             return EtatJeu.ETAT_ECHEC; // échec
         }
@@ -50,12 +50,13 @@ public class Action {
             return EtatJeu.ETAT_ECHEC; // échec
         }
 
-        Joueur occupant = p.getCase(nouvelleLigne, nouvelleColonne); // récupère le joueur qui occupe la case d'arrivée
+        // récupère le joueur qui occupe la case d'arrivée
+        Joueur occupant = p.getCase(nouvelleLigne, nouvelleColonne);
 
-        // si il y a un joueur dans la case
+        // s'il y a un joueur dans la case d'arrivée
         if (occupant != null) {
 
-            // si la case est déjà occupée par le joueur qui joue le coup
+            // si c'est le joueur qui joue le coup
             if (occupant == j){
                 return EtatJeu.ETAT_ECHEC; // échec
             }
@@ -68,6 +69,7 @@ public class Action {
         }
 
         // sinon si on arrive ici, le coup est valide
+
         s.modifie(l, c, null); // vide la case de départ
         s.modifie(nouvelleLigne, nouvelleColonne, j); // ajoute le pion à la case d'arrivée
         s.setTourAdverse(); // passe au tour adverse

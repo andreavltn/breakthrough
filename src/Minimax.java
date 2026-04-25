@@ -6,7 +6,9 @@ import java.util.function.BiFunction;
 public class Minimax {
 
     // algorithme minimax avec élagage alpha/beta
-    public static double minimaxAB(Joueur j, EtatJeu etat, int profondeur, double alpha, double beta, BiFunction<Joueur, EtatJeu, Double> eval) {
+    public static double minimaxAB(Joueur j, EtatJeu etat, int profondeur,
+                                   double alpha, double beta,
+                                   BiFunction<Joueur, EtatJeu, Double> eval) {
 
         // si profondeur = 0 ou si l'état actuel est final
         if (profondeur == 0 || etat.etatFinal() != Gagnant.AUCUN) {
@@ -46,11 +48,12 @@ public class Minimax {
                     alpha = max;  // met à jour alpha
                 }
 
-                // si alpha>beta (i.e on a déjà trouvé une branche plus prometteuse)
+                // si alpha>beta (i.e on a déjà trouvé une branche meilleure ou équivalente)
                 if (alpha >= beta) {
                     break; // élagage (on arrête de chercher plus loin)
                 }
             }
+
             return max; // on renvoie le score maximal trouvé
         }
 
@@ -74,7 +77,7 @@ public class Minimax {
                     beta = min; // met à jour beta
                 }
 
-                // si alpha>beta (i.e on a déjà trouvé une branche plus prometteuse)
+                // si alpha>beta (i.e on a déjà trouvé une branche meilleure ou équivalente)
                 if (alpha >= beta) {
                     break; // élagage (on arrête de chercher plus loin)
                 }
@@ -85,7 +88,7 @@ public class Minimax {
     }
 
 
-    // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état avec élagage alpha/beta
+    // fonction qui renvoie le meilleur coup possible pour un joueur j dans un état (avec Minimax)
     public static EtatJeu meilleurCoup(Joueur j, EtatJeu etat, int profondeur, BiFunction<Joueur, EtatJeu, Double> eval) {
 
         // génère les successeurs de l'état
@@ -98,6 +101,7 @@ public class Minimax {
 
         List<EtatJeu> meilleurs = new ArrayList<>(); // liste des etats avec le meilleur score
         double max = Double.NEGATIVE_INFINITY; // max = -infini
+
         // pour chaque successeur
         for (EtatJeu s : successeurs) {
 
@@ -114,13 +118,13 @@ public class Minimax {
 
             // si le score est identique
             else if (score==max){
-                meilleurs.add(s);  // ajoute aussi l'état aux meilleurs (car il est équivalent)
+                meilleurs.add(s); // ajoute aussi l'état aux meilleurs (car il est aussi bien)
             }
         }
 
         // génère un indice aléatoire entre 0 et n-1
         int randomValue = new Random().nextInt(meilleurs.size());
-        return meilleurs.get(randomValue); // renvoie le meilleur coup choisi aléatoirement
+        return meilleurs.get(randomValue); // renvoie aléatoirement un des coups
     }
 
 
@@ -154,8 +158,8 @@ public class Minimax {
 
 
 
-    // fait jouer deux evals sur un certain nombre de parties, et renvoie le nomnbre de victoires
-    // positif si evalA>evalB, sinon négatif (ou nul)
+    // fait jouer deux eval sur un certain nombre de parties, et renvoie le nombre de victoires
+    // le score renvoyé est positif si evalA est meilleure que evalB, sinon négatif (ou nul)
     public static double comparerEvals(BiFunction<Joueur, EtatJeu, Double> evalA,
                                     BiFunction<Joueur, EtatJeu, Double> evalB,
                                     int profondeur, int nbParties) {
@@ -165,13 +169,13 @@ public class Minimax {
         int victoires = 0;
 
         // fait jouer n parties
-        // alterne le joueur qui commence par équité
+        // alterne le joueur qui commence pour équité
         for (int i=0; i<nbParties; i++) {
 
             Gagnant resultat; // le gagnant de la partie
 
             if (i%2 == 0) {
-                resultat = unePartie(evalA, evalB, profondeur); //evalA = blanc donc commence
+                resultat = unePartie(evalA, evalB, profondeur); // evalA commence, evalA = blancs
                 if (resultat == Gagnant.BLANC) victoires++; // incrémente si evalA gagne
                 if (resultat == Gagnant.NOIR)  victoires--; // décrémente si evalB gagne
             } else {
@@ -181,7 +185,7 @@ public class Minimax {
             }
         }
 
-        return victoires;
+        return victoires; // renvoie le score du tournoi
     }
 
 }
