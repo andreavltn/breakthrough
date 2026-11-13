@@ -1,6 +1,6 @@
 # Breakthrough — IA Minimax
 
-Jeu de plateau à deux joueurs avec intelligence artificielle.
+Jeu de plateau à deux joueurs avec intelligence artificielle en Java.
 Basé sur l'algorithme minimax avec élagage alpha-bêta.
 
 ---
