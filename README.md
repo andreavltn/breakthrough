@@ -78,7 +78,7 @@ Il est possible de modifier les paramètres suivants :
 - Le nombre de parties jouées à chaque comparaison (nbParties)
 - La profondeur maximum de recherche (profondeurMax)
 
-Ils sont utilisés dans la fonction `optimiser(pasInitial, nbIter, nbParties, profondeurMax)`, à la ligne suivante :
+Ils sont utilisés dans la fonction `optimiser(x, pasInitial, nbIter, nbParties, profondeurMax)`, à la ligne suivante :
 - double[] resultat = optimiser(x, 5, 50, 100, 2)
 
 Pour tester rapidement la fonctionnalité, remplacer la profondeur par 1 (les résultats seront beaucoup plus bruités, mais le temps de calcul beaucoup moins important). Avec profondeur = 2, environ 15-20min de temps de calcul pour obtenir une moyenne des vecteurs optimaux.
